@@ -54,3 +54,12 @@ fetch("data/Physical_Activities.json")
       activityList.appendChild(li);
     });
   });
+
+function toggleSection(id) {
+  const section = document.getElementById(id);
+  section.style.display =
+    section.style.display === "none" || section.style.display === ""
+      ? "block"
+      : "none";
+}
+
