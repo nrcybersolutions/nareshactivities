@@ -1,1 +1,137 @@
-
+[
+  {
+    "Id": "DT-001",
+    "task_name": "Sourya Vaccination",
+    "category": "Personal",
+    "frequency": "daily",
+    "deadline": "evening",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-002",
+    "task_name": "Insurance at India",
+    "category": "Personal",
+    "frequency": "daily",
+    "deadline": "evening",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-003",
+    "task_name": "Tax filing",
+    "category": "Personal",
+    "frequency": "weekly",
+    "deadline": "anytime",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-004",
+    "task_name": "BCH- Invoice-Timesheet",
+    "category": "Payments",
+    "frequency": "weekly",
+    "deadline": "morning",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-005",
+    "task_name": "Face Exercise",
+    "category": "Workout",
+    "frequency": "daily",
+    "deadline": "morning",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-006",
+    "task_name": "Exercise",
+    "category": "Workout",
+    "frequency": "daily",
+    "deadline": "morning",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-007",
+    "task_name": "Uber Driving",
+    "category": "Other",
+    "frequency": "weekly",
+    "deadline": "evening",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-008",
+    "task_name": "Bill Payments",
+    "category": "Payments",
+    "frequency": "monthly",
+    "deadline": "morning",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-009",
+    "task_name": "Website Build",
+    "category": "Learn",
+    "frequency": "daily",
+    "deadline": "evening",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-010",
+    "task_name": "DigitalMarketing",
+    "category": "Learn",
+    "frequency": "weekly",
+    "deadline": "anytime",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-011",
+    "task_name": "Apply Jobs",
+    "category": "Other",
+    "frequency": "alternate",
+    "deadline": "evening",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-012",
+    "task_name": "Garage Cleaning",
+    "category": "Other",
+    "frequency": "weekly",
+    "deadline": "afternoon",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-013",
+    "task_name": "Docs and Certs Sorting",
+    "category": "Other",
+    "frequency": "weekly",
+    "deadline": "evening",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-014",
+    "task_name": "Temple on Saturday",
+    "category": "GoingOut",
+    "frequency": "weekly",
+    "deadline": "morning",
+    "link": null,
+    "None": null
+  },
+  {
+    "Id": "DT-015",
+    "task_name": "Outing on Sunday",
+    "category": "GoingOut",
+    "frequency": "weekly",
+    "deadline": "morning",
+    "link": null,
+    "None": null
+  }
+]
