@@ -1,1 +1,90 @@
-
+[
+  {
+    "id": "PA-001",
+    "activity_name": "Meditation",
+    "category": "Yoga",
+    "duration": "15 min",
+    "level": "medium",
+    "link": "https://youtu.be/vj0JDwQLof4?si=0fdwo6FeG8wjJo0T"
+  },
+  {
+    "id": "PA-002",
+    "activity_name": "Face exercise",
+    "category": "Face",
+    "duration": "5 min",
+    "level": "medium",
+    "link": "https://youtu.be/oJIk2PyukjY?si=-5dbTz50Lm43tcj9"
+  },
+  {
+    "id": "PA-003",
+    "activity_name": "Back stretching ",
+    "category": "Stretching",
+    "duration": "10 min",
+    "level": "medium",
+    "link": "https://youtu.be/DxIeqiyYZkQ?si=tYoS56TjjcvlPmrl"
+  },
+  {
+    "id": "PA-004",
+    "activity_name": "Day 1: Chest",
+    "category": "Workout",
+    "duration": "30 min",
+    "level": "medium",
+    "link": "https://youtu.be/l5yuivJYj5k?si=21WxOwS4mRnwXhdy"
+  },
+  {
+    "id": "PA-005",
+    "activity_name": "Day 2: Hands",
+    "category": "Workout",
+    "duration": "30 min",
+    "level": "medium",
+    "link": "https://youtu.be/mcuFTrNDLkg?si=k9ImmIfNqSGTPxnR"
+  },
+  {
+    "id": "PA-006",
+    "activity_name": "Day 3: Back",
+    "category": "Workout",
+    "duration": "30 min",
+    "level": "medium",
+    "link": "https://youtu.be/cuP7mNJU0KY?si=DG6dBsVHHUKKkVQI"
+  },
+  {
+    "id": "PA-007",
+    "activity_name": "Day 4: Shoulders",
+    "category": "Workout",
+    "duration": "30 min",
+    "level": "medium",
+    "link": "https://youtu.be/YoVM-enSzGU?si=bORLQ6A2c7WvoBmD"
+  },
+  {
+    "id": "PA-008",
+    "activity_name": "Day 5: Legs",
+    "category": "Workout",
+    "duration": "30 min",
+    "level": "medium",
+    "link": "https://youtu.be/cD4YdQhVuss?si=O-jK0BVCHIkFzJ2Y"
+  },
+  {
+    "id": "PA-009",
+    "activity_name": "Day 6: Core",
+    "category": "Workout",
+    "duration": "30 min",
+    "level": "medium",
+    "link": null
+  },
+  {
+    "id": "PA-010",
+    "activity_name": "Day 7: Rest / Stretch",
+    "category": "Stretching",
+    "duration": "15 min",
+    "level": "medium",
+    "link": "https://youtu.be/FI51zRzgIe4?si=eSYWlKMzwVQkdxcz"
+  },
+  {
+    "id": "PA-011",
+    "activity_name": "Walking",
+    "category": "Walking",
+    "duration": "30 min",
+    "level": "medium",
+    "link": "https://youtu.be/-SSYX8sIOmM?si=vd-1mZrBCPl8RpKK"
+  }
+]
