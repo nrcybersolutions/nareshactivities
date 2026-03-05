@@ -45,8 +45,14 @@
       margin-bottom: 20px;
     }
 
+    details summary {
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
     h2, h3, h4 {
-      margin-top: 15px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -85,6 +91,9 @@ window.onload = function() {
       if (!routineDiv) return;
 
       routineDiv.innerHTML = "";
+
+      // ✅ SORT BY ORDER (if exists)
+      data.sort((a, b) => (a.order || 0) - (b.order || 0));
 
       const grouped = {};
 
@@ -125,7 +134,7 @@ window.onload = function() {
             grouped[level1][level2][level3].forEach(item => {
 
               const container = document.createElement("div");
-              container.style.padding = "8px 0 8px 15px";
+              container.style.padding = "6px 0 6px 15px";
 
               const title = document.createElement("div");
               title.style.fontWeight = "bold";
