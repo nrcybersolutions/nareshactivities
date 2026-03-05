@@ -9,19 +9,11 @@ document.addEventListener("DOMContentLoaded", function() {
       const routineDiv = document.getElementById("routine");
       if (!routineDiv) return;
 
-      routineDiv.innerHTML = ""; // clear before render
-
-      // 🔹 Filter Active only
-      const activeItems = data.filter(item => 
-        item.Status === "Active" || item.status === "Active"
-      );
-
-      // 🔹 Sort by order number
-      activeItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+      routineDiv.innerHTML = "";
 
       const grouped = {};
 
-      activeItems.forEach(item => {
+      data.forEach(item => {
 
         const l1 = item.level1 || "Other";
         const l2 = item.level2 || "Misc";
@@ -48,9 +40,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
           for (const level3 in grouped[level1][level2]) {
 
-            const h4 = document.createElement("h4");
-            h4.textContent = level3;
-            routineDiv.appendChild(h4);
+            if (level3 !== "") {
+              const h4 = document.createElement("h4");
+              h4.textContent = level3;
+              routineDiv.appendChild(h4);
+            }
 
             grouped[level1][level2][level3].forEach(item => {
 
@@ -64,15 +58,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 p.appendChild(a);
               } else {
                 p.textContent = item.item_name;
-              }
-
-              // 🔹 Show notes if exists
-              if (item.notes) {
-                const note = document.createElement("div");
-                note.style.fontSize = "12px";
-                note.style.color = "gray";
-                note.textContent = item.notes;
-                p.appendChild(note);
               }
 
               routineDiv.appendChild(p);
