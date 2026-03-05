@@ -123,13 +123,11 @@ Daily Routine
 function toggleSection(id) {
   const selected = document.getElementById(id);
 
-  // If already visible → hide
   if (selected.style.display === "block") {
     selected.style.display = "none";
     return;
   }
 
-  // Otherwise hide all first
   document.querySelectorAll(".section").forEach(sec => {
     sec.style.display = "none";
   });
@@ -151,68 +149,53 @@ fetch("data/daily_routine.json")
   routineDiv.innerHTML = "";
   dailyDiv.innerHTML = "";
 
-  // Sort by order
   data.sort((a, b) => (a.order || 0) - (b.order || 0));
 
   // ======================
-  // DAILY TASKS
+  // DAILY TASKS (3 COLUMN)
   // ======================
 
-const urgentItems = data.filter(item => item.urgent === true);
+  const urgentItems = data.filter(item => item.urgent === true);
+  const groupedUrgent = {};
 
-const groupedUrgent = {};
+  urgentItems.forEach(item => {
+    const category = item.level1 || "Other";
 
-urgentItems.forEach(item => {
-  const category = item.level1 || "Other";
-
-  if (!groupedUrgent[category]) {
-    groupedUrgent[category] = [];
-  }
-
-  groupedUrgent[category].push(item);
-});
-
-// Create grid container
-const grid = document.createElement("div");
-grid.style.display = "grid";
-grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
-grid.style.gap = "20px";
-
-for (const category in groupedUrgent) {
-
-  const column = document.createElement("div");
-
-  const header = document.createElement("div");
-  header.style.fontWeight = "bold";
-  header.style.marginBottom = "10px";
-  header.style.color = "#2a5298";
-  header.textContent = category;
-
-  column.appendChild(header);
-
-  groupedUrgent[category].forEach(item => {
-    const task = document.createElement("div");
-    task.style.marginBottom = "6px";
-
-    if (item.link) {
-      const a = document.createElement("a");
-      a.href = item.link;
-      a.target = "_blank";
-      a.textContent = item.item_name;
-      task.appendChild(a);
-    } else {
-      task.textContent = item.item_name;
+    if (!groupedUrgent[category]) {
+      groupedUrgent[category] = [];
     }
 
-    column.appendChild(task);
+    groupedUrgent[category].push(item);
   });
 
-  grid.appendChild(column);
-}
+  const grid = document.createElement("div");
+  grid.style.display = "grid";
+  grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
+  grid.style.gap = "20px";
 
-dailyDiv.appendChild(grid);
+  for (const category in groupedUrgent) {
+
+    const column = document.createElement("div");
+
+    const header = document.createElement("div");
+    header.style.fontWeight = "bold";
+    header.style.marginBottom = "10px";
+    header.style.color = "#2a5298";
+    header.textContent = category;
+
+    column.appendChild(header);
+
+    groupedUrgent[category].forEach(item => {
+      const task = document.createElement("div");
+      task.style.marginBottom = "6px";
+      task.textContent = item.item_name;
+      column.appendChild(task);
     });
+
+    grid.appendChild(column);
   }
+
+  dailyDiv.appendChild(grid);
 
   // ======================
   // ROUTINE STRUCTURE
@@ -262,16 +245,7 @@ dailyDiv.appendChild(grid);
         grouped[level1][level2][level3].forEach(item => {
 
           const li = document.createElement("li");
-
-          if (item.link) {
-            const a = document.createElement("a");
-            a.href = item.link;
-            a.target = "_blank";
-            a.textContent = item.item_name;
-            li.appendChild(a);
-          } else {
-            li.textContent = item.item_name;
-          }
+          li.textContent = item.item_name;
 
           if (item.notes) {
             const note = document.createElement("div");
