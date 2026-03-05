@@ -1,177 +1,90 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Naresh Personal OS</title>
+<script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: white;
-      min-height: 100vh;
-    }
+document.addEventListener("DOMContentLoaded", function() {
 
-    h1 {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+  fetch("data/daily_routine.json")
+    .then(res => res.json())
+    .then(data => {
 
-    .container {
-      max-width: 500px;
-      margin: auto;
-    }
+      const routineDiv = document.getElementById("routine");
+      if (!routineDiv) return;
 
-    .main-btn {
-      width: 100%;
-      padding: 16px;
-      margin-bottom: 15px;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      background: white;
-      color: #2a5298;
-      cursor: pointer;
-    }
+      routineDiv.innerHTML = ""; // clear before render
 
-    .section {
-      display: none;
-      background: white;
-      color: black;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
+      // 🔹 Filter Active only
+      const activeItems = data.filter(item => 
+        item.Status === "Active" || item.status === "Active"
+      );
 
-    .level1-btn, .level2-btn {
-      width: 100%;
-      margin-top: 8px;
-      padding: 8px;
-      border: none;
-      border-radius: 6px;
-      background: #e6e6e6;
-      cursor: pointer;
-      text-align: left;
-      font-weight: bold;
-    }
+      // 🔹 Sort by order number
+      activeItems.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-    .level2-btn {
-      margin-left: 10px;
-      background: #f2f2f2;
-      font-weight: normal;
-    }
+      const grouped = {};
 
-    .item-link {
-      margin-left: 25px;
-      display: block;
-      padding: 4px 0;
-    }
-  </style>
-</head>
+      activeItems.forEach(item => {
 
-<body>
+        const l1 = item.level1 || "Other";
+        const l2 = item.level2 || "Misc";
+        const l3 = item.level3 || "General";
 
-  <h1>Naresh Personal OS</h1>
+        if (!grouped[l1]) grouped[l1] = {};
+        if (!grouped[l1][l2]) grouped[l1][l2] = {};
+        if (!grouped[l1][l2][l3]) grouped[l1][l2][l3] = [];
 
-  <div class="container">
+        grouped[l1][l2][l3].push(item);
+      });
 
-    <button class="main-btn" onclick="showSection('routine')">
-      Daily Routine
-    </button>
+      for (const level1 in grouped) {
 
-    <div id="routine" class="section"></div>
+        const h2 = document.createElement("h2");
+        h2.textContent = level1;
+        routineDiv.appendChild(h2);
 
-  </div>
+        for (const level2 in grouped[level1]) {
 
-  <script>
+          const h3 = document.createElement("h3");
+          h3.textContent = level2;
+          routineDiv.appendChild(h3);
 
-    function showSection(id) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(sec => sec.style.display = "none");
+          for (const level3 in grouped[level1][level2]) {
 
-      const selected = document.getElementById(id);
-      if (selected) selected.style.display = "block";
-    }
+            const h4 = document.createElement("h4");
+            h4.textContent = level3;
+            routineDiv.appendChild(h4);
 
-    window.onload = function() {
+            grouped[level1][level2][level3].forEach(item => {
 
-      fetch("data/daily_routine.json")
-        .then(res => res.json())
-        .then(data => {
+              const p = document.createElement("p");
 
-          const routineDiv = document.getElementById("routine");
-          if (!routineDiv) return;
+              if (item.link) {
+                const a = document.createElement("a");
+                a.href = item.link;
+                a.target = "_blank";
+                a.textContent = item.item_name;
+                p.appendChild(a);
+              } else {
+                p.textContent = item.item_name;
+              }
 
-          const grouped = {};
+              // 🔹 Show notes if exists
+              if (item.notes) {
+                const note = document.createElement("div");
+                note.style.fontSize = "12px";
+                note.style.color = "gray";
+                note.textContent = item.notes;
+                p.appendChild(note);
+              }
 
-          data.forEach(item => {
-            const l1 = item.level1 || "Other";
-            const l2 = item.level2 || "Misc";
+              routineDiv.appendChild(p);
+            });
 
-            if (!grouped[l1]) grouped[l1] = {};
-            if (!grouped[l1][l2]) grouped[l1][l2] = [];
-
-            grouped[l1][l2].push(item);
-          });
-
-          for (const level1 in grouped) {
-
-            // LEVEL 1 BUTTON
-            const level1Btn = document.createElement("button");
-            level1Btn.textContent = "▶ " + level1;
-            level1Btn.className = "level1-btn";
-
-            const level1Container = document.createElement("div");
-            level1Container.style.display = "none";
-
-            level1Btn.onclick = function() {
-              const isHidden = level1Container.style.display === "none";
-              level1Container.style.display = isHidden ? "block" : "none";
-              level1Btn.textContent = (isHidden ? "▼ " : "▶ ") + level1;
-            };
-
-            routineDiv.appendChild(level1Btn);
-            routineDiv.appendChild(level1Container);
-
-            for (const level2 in grouped[level1]) {
-
-              // LEVEL 2 BUTTON
-              const level2Btn = document.createElement("button");
-              level2Btn.textContent = "▶ " + level2;
-              level2Btn.className = "level2-btn";
-
-              const level2Container = document.createElement("div");
-              level2Container.style.display = "none";
-
-              level2Btn.onclick = function() {
-                const isHidden = level2Container.style.display === "none";
-                level2Container.style.display = isHidden ? "block" : "none";
-                level2Btn.textContent = (isHidden ? "▼ " : "▶ ") + level2;
-              };
-
-              level1Container.appendChild(level2Btn);
-              level1Container.appendChild(level2Container);
-
-              grouped[level1][level2].forEach(item => {
-
-                const link = document.createElement("a");
-                link.href = item.link || "#";
-                link.target = "_blank";
-                link.textContent = item.item_name;
-                link.className = "item-link";
-
-                level2Container.appendChild(link);
-              });
-            }
           }
+        }
+      }
 
-        })
-        .catch(err => console.error(err));
-    };
+    })
+    .catch(err => console.error("Fetch error:", err));
 
-  </script>
+});
 
-</body>
-</html>
+</script>
