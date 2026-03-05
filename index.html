@@ -44,6 +44,30 @@
       border-radius: 12px;
       margin-bottom: 20px;
     }
+
+    .level1-btn, .level2-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      background: #e6e6e6;
+      cursor: pointer;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .level2-btn {
+      margin-left: 10px;
+      background: #f2f2f2;
+      font-weight: normal;
+    }
+
+    .item-link {
+      margin-left: 25px;
+      display: block;
+      padding: 4px 0;
+    }
   </style>
 </head>
 
@@ -94,31 +118,51 @@
 
           for (const level1 in grouped) {
 
-            const h2 = document.createElement("h2");
-            h2.textContent = level1;
-            routineDiv.appendChild(h2);
+            // LEVEL 1 BUTTON
+            const level1Btn = document.createElement("button");
+            level1Btn.textContent = "▶ " + level1;
+            level1Btn.className = "level1-btn";
+
+            const level1Container = document.createElement("div");
+            level1Container.style.display = "none";
+
+            level1Btn.onclick = function() {
+              const isHidden = level1Container.style.display === "none";
+              level1Container.style.display = isHidden ? "block" : "none";
+              level1Btn.textContent = (isHidden ? "▼ " : "▶ ") + level1;
+            };
+
+            routineDiv.appendChild(level1Btn);
+            routineDiv.appendChild(level1Container);
 
             for (const level2 in grouped[level1]) {
 
-              const h3 = document.createElement("h3");
-              h3.textContent = level2;
-              routineDiv.appendChild(h3);
+              // LEVEL 2 BUTTON
+              const level2Btn = document.createElement("button");
+              level2Btn.textContent = "▶ " + level2;
+              level2Btn.className = "level2-btn";
+
+              const level2Container = document.createElement("div");
+              level2Container.style.display = "none";
+
+              level2Btn.onclick = function() {
+                const isHidden = level2Container.style.display === "none";
+                level2Container.style.display = isHidden ? "block" : "none";
+                level2Btn.textContent = (isHidden ? "▼ " : "▶ ") + level2;
+              };
+
+              level1Container.appendChild(level2Btn);
+              level1Container.appendChild(level2Container);
 
               grouped[level1][level2].forEach(item => {
 
-                const p = document.createElement("p");
+                const link = document.createElement("a");
+                link.href = item.link || "#";
+                link.target = "_blank";
+                link.textContent = item.item_name;
+                link.className = "item-link";
 
-                if (item.link) {
-                  const a = document.createElement("a");
-                  a.href = item.link;
-                  a.target = "_blank";
-                  a.textContent = item.item_name;
-                  p.appendChild(a);
-                } else {
-                  p.textContent = item.item_name;
-                }
-
-                routineDiv.appendChild(p);
+                level2Container.appendChild(link);
               });
             }
           }
