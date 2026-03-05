@@ -103,21 +103,37 @@
     .then(data => {
       const routineDiv = document.getElementById("routine");
 
-      data.forEach(item => {
-        const p = document.createElement("p");
+      const grouped = {};
 
-        if (item.link) {
-          const a = document.createElement("a");
-          a.href = item.link;
-          a.target = "_blank";
-          a.textContent = item.item_name;
-          p.appendChild(a);
-        } else {
-          p.textContent = item.item_name;
-        }
+data.forEach(item => {
+  if (!grouped[item.level1]) {
+    grouped[item.level1] = [];
+  }
+  grouped[item.level1].push(item);
+});
 
-        routineDiv.appendChild(p);
-      });
+for (const category in grouped) {
+  const h3 = document.createElement("h3");
+  h3.textContent = category;
+  routineDiv.appendChild(h3);
+
+  grouped[category].forEach(item => {
+    const p = document.createElement("p");
+
+    if (item.link) {
+      const a = document.createElement("a");
+      a.href = item.link;
+      a.target = "_blank";
+      a.textContent = item.item_name;
+      p.appendChild(a);
+    } else {
+      p.textContent = item.item_name;
+    }
+
+    routineDiv.appendChild(p);
+  });
+}
+     
     })
     .catch(error => {
       console.error("Fetch error:", error);
