@@ -7,34 +7,14 @@
     selected.style.display = "block";
   }
 
-  // Load Daily Routine JSON
   fetch("data/daily_routine.json")
     .then(res => res.json())
     .then(data => {
-      const routineDiv = document.getElementById("routine");
-
-      data.forEach(item => {
-        const div = document.createElement("div");
-        div.style.marginBottom = "8px";
-
-        if (item.link) {
-          const a = document.createElement("a");
-          a.href = item.link;
-          a.target = "_blank";
-          a.textContent =
-            item.level1 + " → " +
-            item.level2 + " → " +
-            (item.level3 ? item.level3 + " → " : "") +
-            item.item_name;
-          div.appendChild(a);
-        } else {
-          div.textContent =
-            item.level1 + " → " +
-            item.level2 + " → " +
-            item.item_name;
-        }
-
-        routineDiv.appendChild(div);
-      });
+      console.log("JSON loaded:", data);
+      document.getElementById("routine").innerHTML = "JSON Loaded Successfully";
+    })
+    .catch(err => {
+      console.error("Fetch error:", err);
+      document.getElementById("routine").innerHTML = "JSON FAILED";
     });
 </script>
