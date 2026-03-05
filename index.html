@@ -1,20 +1,15 @@
-<script>
-  function toggleSection(id) {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(sec => sec.style.display = "none");
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Naresh Personal OS</title>
+</head>
+<body>
 
-    const selected = document.getElementById(id);
-    selected.style.display = "block";
-  }
+  <h1>Naresh Personal OS</h1>
 
-  fetch("data/daily_routine.json")
-    .then(res => res.json())
-    .then(data => {
-      console.log("JSON loaded:", data);
-      document.getElementById("routine").innerHTML = "JSON Loaded Successfully";
-    })
-    .catch(err => {
-      console.error("Fetch error:", err);
-      document.getElementById("routine").innerHTML = "JSON FAILED";
-    });
-</script>
+  <button>Daily Tasks</button>
+  <button>Daily Routine</button>
+  <button>Physical Activities</button>
+
+</body>
+</html>
