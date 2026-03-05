@@ -1,77 +1,133 @@
-<script>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Naresh Personal OS</title>
 
-document.addEventListener("DOMContentLoaded", function() {
-
-  // ✅ Make toggle available globally
-  window.toggleSection = function(id) {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(sec => sec.style.display = "none");
-
-    const selected = document.getElementById(id);
-    if (selected) {
-      selected.style.display = "block";
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      min-height: 100vh;
     }
-  };
 
-  // ✅ Load JSON
-  fetch("data/daily_routine.json")
-    .then(res => {
-      if (!res.ok) throw new Error("JSON not found");
-      return res.json();
-    })
-    .then(data => {
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
 
-      const routineDiv = document.getElementById("routine");
-      if (!routineDiv) return;
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
 
-      const grouped = {};
+    .main-btn {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: white;
+      color: #2a5298;
+      cursor: pointer;
+    }
 
-      data.forEach(item => {
-        const l1 = item.level1 || "Other";
-        const l2 = item.level2 || "Misc";
+    .section {
+      display: none;
+      background: white;
+      color: black;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
 
-        if (!grouped[l1]) grouped[l1] = {};
-        if (!grouped[l1][l2]) grouped[l1][l2] = [];
+<body>
 
-        grouped[l1][l2].push(item);
-      });
+  <h1>Naresh Personal OS</h1>
 
-      for (const level1 in grouped) {
+  <div class="container">
 
-        const h2 = document.createElement("h2");
-        h2.textContent = level1;
-        routineDiv.appendChild(h2);
+    <button class="main-btn" onclick="showSection('routine')">
+      Daily Routine
+    </button>
 
-        for (const level2 in grouped[level1]) {
+    <div id="routine" class="section"></div>
 
-          const h3 = document.createElement("h3");
-          h3.textContent = level2;
-          routineDiv.appendChild(h3);
+  </div>
 
-          grouped[level1][level2].forEach(item => {
+  <script>
 
-            const p = document.createElement("p");
+    function showSection(id) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(sec => sec.style.display = "none");
 
-            if (item.link) {
-              const a = document.createElement("a");
-              a.href = item.link;
-              a.target = "_blank";
-              a.textContent = item.item_name;
-              p.appendChild(a);
-            } else {
-              p.textContent = item.item_name;
-            }
+      const selected = document.getElementById(id);
+      if (selected) selected.style.display = "block";
+    }
 
-            routineDiv.appendChild(p);
+    window.onload = function() {
+
+      fetch("data/daily_routine.json")
+        .then(res => res.json())
+        .then(data => {
+
+          const routineDiv = document.getElementById("routine");
+          if (!routineDiv) return;
+
+          const grouped = {};
+
+          data.forEach(item => {
+            const l1 = item.level1 || "Other";
+            const l2 = item.level2 || "Misc";
+
+            if (!grouped[l1]) grouped[l1] = {};
+            if (!grouped[l1][l2]) grouped[l1][l2] = [];
+
+            grouped[l1][l2].push(item);
           });
-        }
-      }
 
-    })
-    .catch(error => {
-      console.error("Fetch error:", error);
-    });
+          for (const level1 in grouped) {
 
-});
+            const h2 = document.createElement("h2");
+            h2.textContent = level1;
+            routineDiv.appendChild(h2);
 
-</script>
+            for (const level2 in grouped[level1]) {
+
+              const h3 = document.createElement("h3");
+              h3.textContent = level2;
+              routineDiv.appendChild(h3);
+
+              grouped[level1][level2].forEach(item => {
+
+                const p = document.createElement("p");
+
+                if (item.link) {
+                  const a = document.createElement("a");
+                  a.href = item.link;
+                  a.target = "_blank";
+                  a.textContent = item.item_name;
+                  p.appendChild(a);
+                } else {
+                  p.textContent = item.item_name;
+                }
+
+                routineDiv.appendChild(p);
+              });
+            }
+          }
+
+        })
+        .catch(err => console.error(err));
+    };
+
+  </script>
+
+</body>
+</html>
