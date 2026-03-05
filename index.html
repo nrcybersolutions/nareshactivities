@@ -1,78 +1,75 @@
 <script>
 
-function toggleSection(id) {
-  const sections = document.querySelectorAll('.section');
-  sections.forEach(sec => sec.style.display = "none");
+document.addEventListener("DOMContentLoaded", function() {
 
-  const selected = document.getElementById(id);
-  selected.style.display = "block";
-}
+  function toggleSection(id) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(sec => sec.style.display = "none");
 
-// Load Daily Routine JSON safely
-fetch("data/daily_routine.json")
-  .then(res => {
-    if (!res.ok) {
-      throw new Error("JSON not found");
-    }
-    return res.json();
-  })
-  .then(data => {
+    const selected = document.getElementById(id);
+    selected.style.display = "block";
+  }
 
-    const routineDiv = document.getElementById("routine");
-    routineDiv.innerHTML = ""; // clear default text
+  window.toggleSection = toggleSection;
 
-    const grouped = {};
+  fetch("data/daily_routine.json")
+    .then(res => {
+      if (!res.ok) throw new Error("JSON not found");
+      return res.json();
+    })
+    .then(data => {
 
-    data.forEach(item => {
+      const routineDiv = document.getElementById("routine");
+      routineDiv.innerHTML = "";
 
-      const l1 = item.level1 || "Other";
-      const l2 = item.level2 || "Misc";
+      const grouped = {};
 
-      if (!grouped[l1]) {
-        grouped[l1] = {};
+      data.forEach(item => {
+        const l1 = item.level1 || "Other";
+        const l2 = item.level2 || "Misc";
+
+        if (!grouped[l1]) grouped[l1] = {};
+        if (!grouped[l1][l2]) grouped[l1][l2] = [];
+
+        grouped[l1][l2].push(item);
+      });
+
+      for (const level1 in grouped) {
+
+        const h2 = document.createElement("h2");
+        h2.textContent = level1;
+        routineDiv.appendChild(h2);
+
+        for (const level2 in grouped[level1]) {
+
+          const h3 = document.createElement("h3");
+          h3.textContent = level2;
+          routineDiv.appendChild(h3);
+
+          grouped[level1][level2].forEach(item => {
+
+            const p = document.createElement("p");
+
+            if (item.link) {
+              const a = document.createElement("a");
+              a.href = item.link;
+              a.target = "_blank";
+              a.textContent = item.item_name;
+              p.appendChild(a);
+            } else {
+              p.textContent = item.item_name;
+            }
+
+            routineDiv.appendChild(p);
+          });
+        }
       }
 
-      if (!grouped[l1][l2]) {
-        grouped[l1][l2] = [];
-      }
-
-      grouped[l1][l2].push(item);
+    })
+    .catch(error => {
+      console.error("Fetch error:", error);
     });
 
-    for (const level1 in grouped) {
-
-      const h2 = document.createElement("h2");
-      h2.textContent = level1;
-      routineDiv.appendChild(h2);
-
-      for (const level2 in grouped[level1]) {
-
-        const h3 = document.createElement("h3");
-        h3.textContent = level2;
-        routineDiv.appendChild(h3);
-
-        grouped[level1][level2].forEach(item => {
-
-          const p = document.createElement("p");
-
-          if (item.link) {
-            const a = document.createElement("a");
-            a.href = item.link;
-            a.target = "_blank";
-            a.textContent = item.item_name;
-            p.appendChild(a);
-          } else {
-            p.textContent = item.item_name;
-          }
-
-          routineDiv.appendChild(p);
-        });
-      }
-    }
-
-  })
-  .catch(error => {
-    console.error("Fetch error:", error);
-  });
+});
 
 </script>
