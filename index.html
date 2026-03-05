@@ -83,13 +83,46 @@
   </div>
 
   <script>
-    function toggleSection(id) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(sec => sec.style.display = "none");
 
-      const selected = document.getElementById(id);
-      selected.style.display = "block";
-    }
+    function toggleSection(id) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(sec => sec.style.display = "none");
+
+    const selected = document.getElementById(id);
+    selected.style.display = "block";
+  }
+
+  // Load Daily Routine JSON safely
+  fetch("data/daily_routine.json")
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("JSON not found");
+      }
+      return res.json();
+    })
+    .then(data => {
+      const routineDiv = document.getElementById("routine");
+
+      data.forEach(item => {
+        const p = document.createElement("p");
+
+        if (item.link) {
+          const a = document.createElement("a");
+          a.href = item.link;
+          a.target = "_blank";
+          a.textContent = item.item_name;
+          p.appendChild(a);
+        } else {
+          p.textContent = item.item_name;
+        }
+
+        routineDiv.appendChild(p);
+      });
+    })
+    .catch(error => {
+      console.error("Fetch error:", error);
+    });
+
   </script>
 
 </body>
