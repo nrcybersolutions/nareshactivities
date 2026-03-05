@@ -1,76 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Naresh Personal OS</title>
+<script>
+  function toggleSection(id) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(sec => sec.style.display = "none");
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f4f6f8;
-    }
+    const selected = document.getElementById(id);
+    selected.style.display = "block";
+  }
 
-    h1 {
-      text-align: center;
-    }
+  // Load Daily Routine JSON
+  fetch("data/daily_routine.json")
+    .then(res => res.json())
+    .then(data => {
+      const routineDiv = document.getElementById("routine");
 
-    .main-btn {
-      width: 100%;
-      padding: 14px;
-      margin: 10px 0;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
-      color: white;
-      cursor: pointer;
-    }
+      data.forEach(item => {
+        const div = document.createElement("div");
+        div.style.marginBottom = "8px";
 
-    .section {
-      display: none;
-      background: white;
-      padding: 15px;
-      margin-top: 5px;
-      border-radius: 10px;
-    }
-  </style>
-</head>
+        if (item.link) {
+          const a = document.createElement("a");
+          a.href = item.link;
+          a.target = "_blank";
+          a.textContent =
+            item.level1 + " → " +
+            item.level2 + " → " +
+            (item.level3 ? item.level3 + " → " : "") +
+            item.item_name;
+          div.appendChild(a);
+        } else {
+          div.textContent =
+            item.level1 + " → " +
+            item.level2 + " → " +
+            item.item_name;
+        }
 
-<body>
-
-  <h1>Naresh Personal OS</h1>
-
-  <button class="main-btn" onclick="toggleSection('tasks')">
-    Daily Tasks
-  </button>
-  <div id="tasks" class="section">
-    Daily Tasks Content Coming Soon
-  </div>
-
-  <button class="main-btn" onclick="toggleSection('routine')">
-    Daily Routine
-  </button>
-  <div id="routine" class="section">
-    Daily Routine Content Coming Soon
-  </div>
-
-  <button class="main-btn" onclick="toggleSection('physical')">
-    Physical Activities
-  </button>
-  <div id="physical" class="section">
-    Physical Activities Content Coming Soon
-  </div>
-
-  <script>
-    function toggleSection(id) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(sec => sec.style.display = "none");
-
-      const selected = document.getElementById(id);
-      selected.style.display = "block";
-    }
-  </script>
-
-</body>
-</html>
+        routineDiv.appendChild(div);
+      });
+    });
+</script>
