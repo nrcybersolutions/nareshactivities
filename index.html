@@ -65,90 +65,116 @@
 
   </div>
 
-  <script>
+<script>
 
-    function showSection(id) {
-      document.querySelectorAll(".section").forEach(sec => {
-        sec.style.display = "none";
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(sec => {
+    sec.style.display = "none";
+  });
+  const selected = document.getElementById(id);
+  if (selected) selected.style.display = "block";
+}
+
+window.onload = function() {
+
+  fetch("data/daily_routine.json")
+    .then(response => response.json())
+    .then(data => {
+
+      const routineDiv = document.getElementById("routine");
+      if (!routineDiv) return;
+
+      routineDiv.innerHTML = "";
+
+      const grouped = {};
+
+      data.forEach(item => {
+
+        const l1 = item.level1 || "Other";
+        const l2 = item.level2 || "Misc";
+        const l3 = item.level3 || "General";
+
+        if (!grouped[l1]) grouped[l1] = {};
+        if (!grouped[l1][l2]) grouped[l1][l2] = {};
+        if (!grouped[l1][l2][l3]) grouped[l1][l2][l3] = [];
+
+        grouped[l1][l2][l3].push(item);
       });
 
-      const selected = document.getElementById(id);
-      if (selected) selected.style.display = "block";
-    }
+      for (const level1 in grouped) {
 
-    window.onload = function() {
+        const d1 = document.createElement("details");
+        const s1 = document.createElement("summary");
+        s1.textContent = level1;
+        d1.appendChild(s1);
 
-      fetch("data/daily_routine.json")
-        .then(response => response.json())
-        .then(data => {
+        for (const level2 in grouped[level1]) {
 
-          const routineDiv = document.getElementById("routine");
-          if (!routineDiv) return;
+          const d2 = document.createElement("details");
+          const s2 = document.createElement("summary");
+          s2.textContent = level2;
+          d2.appendChild(s2);
 
-          routineDiv.innerHTML = "";
+          for (const level3 in grouped[level1][level2]) {
 
-          const grouped = {};
+            const d3 = document.createElement("details");
+            const s3 = document.createElement("summary");
+            s3.textContent = level3;
+            d3.appendChild(s3);
 
-          data.forEach(item => {
+            grouped[level1][level2][level3].forEach(item => {
 
-            const l1 = item.level1 || "Other";
-            const l2 = item.level2 || "Misc";
-            const l3 = item.level3 || "";
+              const container = document.createElement("div");
+              container.style.padding = "8px 0 8px 15px";
 
-            if (!grouped[l1]) grouped[l1] = {};
-            if (!grouped[l1][l2]) grouped[l1][l2] = {};
-            if (!grouped[l1][l2][l3]) grouped[l1][l2][l3] = [];
+              const title = document.createElement("div");
+              title.style.fontWeight = "bold";
 
-            grouped[l1][l2][l3].push(item);
-          });
-
-          for (const level1 in grouped) {
-
-            const h2 = document.createElement("h2");
-            h2.textContent = level1;
-            routineDiv.appendChild(h2);
-
-            for (const level2 in grouped[level1]) {
-
-              const h3 = document.createElement("h3");
-              h3.textContent = level2;
-              routineDiv.appendChild(h3);
-
-              for (const level3 in grouped[level1][level2]) {
-
-                if (level3 !== "") {
-                  const h4 = document.createElement("h4");
-                  h4.textContent = level3;
-                  routineDiv.appendChild(h4);
-                }
-
-                grouped[level1][level2][level3].forEach(item => {
-
-                  const p = document.createElement("p");
-
-                  if (item.link) {
-                    const a = document.createElement("a");
-                    a.href = item.link;
-                    a.target = "_blank";
-                    a.textContent = item.item_name;
-                    p.appendChild(a);
-                  } else {
-                    p.textContent = item.item_name;
-                  }
-
-                  routineDiv.appendChild(p);
-                });
-
+              if (item.link) {
+                const a = document.createElement("a");
+                a.href = item.link;
+                a.target = "_blank";
+                a.textContent = item.item_name;
+                title.appendChild(a);
+              } else {
+                title.textContent = item.item_name;
               }
-            }
+
+              container.appendChild(title);
+
+              if (item.type) {
+                const type = document.createElement("div");
+                type.style.fontSize = "12px";
+                type.textContent = "Type: " + item.type;
+                container.appendChild(type);
+              }
+
+              if (item.notes) {
+                const notes = document.createElement("div");
+                notes.style.fontSize = "12px";
+                notes.style.color = "gray";
+                notes.textContent = "Notes: " + item.notes;
+                container.appendChild(notes);
+              }
+
+              d3.appendChild(container);
+
+            });
+
+            d2.appendChild(d3);
           }
 
-        })
-        .catch(error => console.error("JSON error:", error));
+          d1.appendChild(d2);
+        }
 
-    };
+        routineDiv.appendChild(d1);
+      }
 
-  </script>
+    })
+    .catch(error => console.error("JSON error:", error));
+};
+
+</script>
 
 </body>
 </html>
