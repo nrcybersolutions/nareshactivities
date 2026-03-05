@@ -84,6 +84,18 @@ li {
   font-size: 12px;
   color: gray;
 }
+
+summary {
+  cursor: pointer;
+}
+
+.daily-item {
+  margin-bottom: 10px;
+  padding: 8px;
+  border-left: 4px solid #2a5298;
+  background: #f3f6ff;
+  border-radius: 6px;
+}
 </style>
 </head>
 
@@ -93,10 +105,15 @@ li {
 
 <div class="container">
 
+<button class="main-btn" onclick="showSection('daily')">
+Daily Tasks
+</button>
+
 <button class="main-btn" onclick="showSection('routine')">
 Daily Routine
 </button>
 
+<div id="daily" class="section"></div>
 <div id="routine" class="section"></div>
 
 </div>
@@ -118,11 +135,47 @@ fetch("data/daily_routine.json")
 .then(data => {
 
   const routineDiv = document.getElementById("routine");
-  if (!routineDiv) return;
+  const dailyDiv = document.getElementById("daily");
+
+  if (!routineDiv || !dailyDiv) return;
 
   routineDiv.innerHTML = "";
+  dailyDiv.innerHTML = "";
 
+  // Sort by order
   data.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  // =============================
+  // DAILY TASKS (urgent filter)
+  // =============================
+
+  const urgentItems = data.filter(item => item.urgent === true);
+
+  if (urgentItems.length === 0) {
+    dailyDiv.innerHTML = "<p>No urgent tasks.</p>";
+  } else {
+    urgentItems.forEach(item => {
+
+      const container = document.createElement("div");
+      container.className = "daily-item";
+
+      if (item.link) {
+        const a = document.createElement("a");
+        a.href = item.link;
+        a.target = "_blank";
+        a.textContent = item.item_name;
+        container.appendChild(a);
+      } else {
+        container.textContent = item.item_name;
+      }
+
+      dailyDiv.appendChild(container);
+    });
+  }
+
+  // =============================
+  // ROUTINE (structured roadmap)
+  // =============================
 
   const grouped = {};
 
