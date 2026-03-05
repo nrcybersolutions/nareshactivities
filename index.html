@@ -1,75 +1,154 @@
-<script>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Naresh Personal OS</title>
 
-document.addEventListener("DOMContentLoaded", function() {
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      min-height: 100vh;
+    }
 
-  fetch("data/daily_routine.json")
-    .then(res => res.json())
-    .then(data => {
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
 
-      const routineDiv = document.getElementById("routine");
-      if (!routineDiv) return;
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
 
-      routineDiv.innerHTML = "";
+    .main-btn {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: white;
+      color: #2a5298;
+      cursor: pointer;
+    }
 
-      const grouped = {};
+    .section {
+      display: none;
+      background: white;
+      color: black;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
 
-      data.forEach(item => {
+    h2, h3, h4 {
+      margin-top: 15px;
+    }
+  </style>
+</head>
 
-        const l1 = item.level1 || "Other";
-        const l2 = item.level2 || "Misc";
-        const l3 = item.level3 || "General";
+<body>
 
-        if (!grouped[l1]) grouped[l1] = {};
-        if (!grouped[l1][l2]) grouped[l1][l2] = {};
-        if (!grouped[l1][l2][l3]) grouped[l1][l2][l3] = [];
+  <h1>Naresh Personal OS</h1>
 
-        grouped[l1][l2][l3].push(item);
+  <div class="container">
+
+    <button class="main-btn" onclick="showSection('routine')">
+      Daily Routine
+    </button>
+
+    <div id="routine" class="section"></div>
+
+  </div>
+
+  <script>
+
+    function showSection(id) {
+      document.querySelectorAll(".section").forEach(sec => {
+        sec.style.display = "none";
       });
 
-      for (const level1 in grouped) {
+      const selected = document.getElementById(id);
+      if (selected) selected.style.display = "block";
+    }
 
-        const h2 = document.createElement("h2");
-        h2.textContent = level1;
-        routineDiv.appendChild(h2);
+    window.onload = function() {
 
-        for (const level2 in grouped[level1]) {
+      fetch("data/daily_routine.json")
+        .then(response => response.json())
+        .then(data => {
 
-          const h3 = document.createElement("h3");
-          h3.textContent = level2;
-          routineDiv.appendChild(h3);
+          const routineDiv = document.getElementById("routine");
+          if (!routineDiv) return;
 
-          for (const level3 in grouped[level1][level2]) {
+          routineDiv.innerHTML = "";
 
-            if (level3 !== "") {
-              const h4 = document.createElement("h4");
-              h4.textContent = level3;
-              routineDiv.appendChild(h4);
-            }
+          const grouped = {};
 
-            grouped[level1][level2][level3].forEach(item => {
+          data.forEach(item => {
 
-              const p = document.createElement("p");
+            const l1 = item.level1 || "Other";
+            const l2 = item.level2 || "Misc";
+            const l3 = item.level3 || "";
 
-              if (item.link) {
-                const a = document.createElement("a");
-                a.href = item.link;
-                a.target = "_blank";
-                a.textContent = item.item_name;
-                p.appendChild(a);
-              } else {
-                p.textContent = item.item_name;
+            if (!grouped[l1]) grouped[l1] = {};
+            if (!grouped[l1][l2]) grouped[l1][l2] = {};
+            if (!grouped[l1][l2][l3]) grouped[l1][l2][l3] = [];
+
+            grouped[l1][l2][l3].push(item);
+          });
+
+          for (const level1 in grouped) {
+
+            const h2 = document.createElement("h2");
+            h2.textContent = level1;
+            routineDiv.appendChild(h2);
+
+            for (const level2 in grouped[level1]) {
+
+              const h3 = document.createElement("h3");
+              h3.textContent = level2;
+              routineDiv.appendChild(h3);
+
+              for (const level3 in grouped[level1][level2]) {
+
+                if (level3 !== "") {
+                  const h4 = document.createElement("h4");
+                  h4.textContent = level3;
+                  routineDiv.appendChild(h4);
+                }
+
+                grouped[level1][level2][level3].forEach(item => {
+
+                  const p = document.createElement("p");
+
+                  if (item.link) {
+                    const a = document.createElement("a");
+                    a.href = item.link;
+                    a.target = "_blank";
+                    a.textContent = item.item_name;
+                    p.appendChild(a);
+                  } else {
+                    p.textContent = item.item_name;
+                  }
+
+                  routineDiv.appendChild(p);
+                });
+
               }
-
-              routineDiv.appendChild(p);
-            });
-
+            }
           }
-        }
-      }
 
-    })
-    .catch(err => console.error("Fetch error:", err));
+        })
+        .catch(error => console.error("JSON error:", error));
 
-});
+    };
 
-</script>
+  </script>
+
+</body>
+</html>
