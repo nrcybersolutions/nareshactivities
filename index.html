@@ -1,75 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Naresh Personal OS</title>
+<meta charset="UTF-8">
+<title>Naresh Personal OS</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: white;
-      min-height: 100vh;
-    }
+<style>
+body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  min-height: 100vh;
+}
 
-    h1 {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+h1 {
+  text-align: center;
+  margin-bottom: 40px;
+}
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-    }
+.container {
+  max-width: 900px;
+  margin: auto;
+}
 
-    .main-btn {
-      width: 100%;
-      padding: 16px;
-      margin-bottom: 15px;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      background: white;
-      color: #2a5298;
-      cursor: pointer;
-    }
+.main-btn {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  color: #2a5298;
+  cursor: pointer;
+}
 
-    .section {
-      display: none;
-      background: white;
-      color: black;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
+.section {
+  display: none;
+  background: white;
+  color: black;
+  padding: 25px;
+  border-radius: 12px;
+}
 
-    details summary {
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 8px;
-    }
+/* LEVEL 1 */
+.level1 {
+  background: #2a5298;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-top: 25px;
+  font-size: 20px;
+  font-weight: bold;
+}
 
-    h2, h3, h4 {
-      margin-top: 10px;
-    }
-  </style>
+/* LEVEL 2 */
+.level2 {
+  background: #e4ecff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+/* LEVEL 3 */
+.level3 {
+  margin-top: 12px;
+  font-weight: bold;
+  color: #333;
+}
+
+ol {
+  padding-left: 25px;
+  margin-top: 10px;
+}
+
+li {
+  margin-bottom: 8px;
+}
+
+.notes {
+  font-size: 12px;
+  color: gray;
+}
+</style>
 </head>
 
 <body>
 
-  <h1>Naresh Personal OS</h1>
+<h1>Naresh Personal OS</h1>
 
-  <div class="container">
+<div class="container">
 
-    <button class="main-btn" onclick="showSection('routine')">
-      Daily Routine
-    </button>
+<button class="main-btn" onclick="showSection('routine')">
+Daily Routine
+</button>
 
-    <div id="routine" class="section"></div>
+<div id="routine" class="section"></div>
 
-  </div>
+</div>
 
 <script>
 
@@ -83,104 +113,88 @@ function showSection(id) {
 
 window.onload = function() {
 
-  fetch("data/daily_routine.json")
-    .then(response => response.json())
-    .then(data => {
+fetch("data/daily_routine.json")
+.then(response => response.json())
+.then(data => {
 
-      const routineDiv = document.getElementById("routine");
-      if (!routineDiv) return;
+  const routineDiv = document.getElementById("routine");
+  if (!routineDiv) return;
 
-      routineDiv.innerHTML = "";
+  routineDiv.innerHTML = "";
 
-      // ✅ SORT BY ORDER (if exists)
-      data.sort((a, b) => (a.order || 0) - (b.order || 0));
+  // Sort by order if exists
+  data.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-      const grouped = {};
+  const grouped = {};
 
-      data.forEach(item => {
+  data.forEach(item => {
 
-        const l1 = item.level1 || "Other";
-        const l2 = item.level2 || "Misc";
-        const l3 = item.level3 || "General";
+    const l1 = item.level1 || "Other";
+    const l2 = item.level2 || "Misc";
+    const l3 = item.level3 || "General";
 
-        if (!grouped[l1]) grouped[l1] = {};
-        if (!grouped[l1][l2]) grouped[l1][l2] = {};
-        if (!grouped[l1][l2][l3]) grouped[l1][l2][l3] = [];
+    if (!grouped[l1]) grouped[l1] = {};
+    if (!grouped[l1][l2]) grouped[l1][l2] = {};
+    if (!grouped[l1][l2][l3]) grouped[l1][l2][l3] = [];
 
-        grouped[l1][l2][l3].push(item);
-      });
+    grouped[l1][l2][l3].push(item);
+  });
 
-      for (const level1 in grouped) {
+  for (const level1 in grouped) {
 
-        const d1 = document.createElement("details");
-        const s1 = document.createElement("summary");
-        s1.textContent = level1;
-        d1.appendChild(s1);
+    const l1Div = document.createElement("div");
+    l1Div.className = "level1";
+    l1Div.textContent = level1;
+    routineDiv.appendChild(l1Div);
 
-        for (const level2 in grouped[level1]) {
+    for (const level2 in grouped[level1]) {
 
-          const d2 = document.createElement("details");
-          const s2 = document.createElement("summary");
-          s2.textContent = level2;
-          d2.appendChild(s2);
+      const l2Div = document.createElement("div");
+      l2Div.className = "level2";
+      l2Div.textContent = level2;
+      routineDiv.appendChild(l2Div);
 
-          for (const level3 in grouped[level1][level2]) {
+      for (const level3 in grouped[level1][level2]) {
 
-            const d3 = document.createElement("details");
-            const s3 = document.createElement("summary");
-            s3.textContent = level3;
-            d3.appendChild(s3);
+        const l3Div = document.createElement("div");
+        l3Div.className = "level3";
+        l3Div.textContent = level3;
+        routineDiv.appendChild(l3Div);
 
-            grouped[level1][level2][level3].forEach(item => {
+        const list = document.createElement("ol");
 
-              const container = document.createElement("div");
-              container.style.padding = "6px 0 6px 15px";
+        grouped[level1][level2][level3].forEach(item => {
 
-              const title = document.createElement("div");
-              title.style.fontWeight = "bold";
+          const li = document.createElement("li");
 
-              if (item.link) {
-                const a = document.createElement("a");
-                a.href = item.link;
-                a.target = "_blank";
-                a.textContent = item.item_name;
-                title.appendChild(a);
-              } else {
-                title.textContent = item.item_name;
-              }
-
-              container.appendChild(title);
-
-              if (item.type) {
-                const type = document.createElement("div");
-                type.style.fontSize = "12px";
-                type.textContent = "Type: " + item.type;
-                container.appendChild(type);
-              }
-
-              if (item.notes) {
-                const notes = document.createElement("div");
-                notes.style.fontSize = "12px";
-                notes.style.color = "gray";
-                notes.textContent = "Notes: " + item.notes;
-                container.appendChild(notes);
-              }
-
-              d3.appendChild(container);
-
-            });
-
-            d2.appendChild(d3);
+          if (item.link) {
+            const a = document.createElement("a");
+            a.href = item.link;
+            a.target = "_blank";
+            a.textContent = item.item_name;
+            li.appendChild(a);
+          } else {
+            li.textContent = item.item_name;
           }
 
-          d1.appendChild(d2);
-        }
+          if (item.notes) {
+            const note = document.createElement("div");
+            note.className = "notes";
+            note.textContent = "Notes: " + item.notes;
+            li.appendChild(note);
+          }
 
-        routineDiv.appendChild(d1);
+          list.appendChild(li);
+        });
+
+        routineDiv.appendChild(list);
       }
+    }
+  }
 
-    })
-    .catch(error => console.error("JSON error:", error));
+})
+.catch(error => console.error("JSON error:", error));
+
 };
 
 </script>
