@@ -41,6 +41,15 @@
     .main-btn:hover {
       transform: scale(1.03);
     }
+
+    .section {
+      display: none;
+      background: white;
+      color: #333;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 
@@ -49,10 +58,39 @@
   <h1>Naresh Personal OS</h1>
 
   <div class="container">
-    <button class="main-btn">Daily Tasks</button>
-    <button class="main-btn">Daily Routine</button>
-    <button class="main-btn">Physical Activities</button>
+
+    <button class="main-btn" onclick="toggleSection('tasks')">
+      Daily Tasks
+    </button>
+    <div id="tasks" class="section">
+      Daily Tasks Coming Soon
+    </div>
+
+    <button class="main-btn" onclick="toggleSection('routine')">
+      Daily Routine
+    </button>
+    <div id="routine" class="section">
+      Daily Routine Coming Soon
+    </div>
+
+    <button class="main-btn" onclick="toggleSection('physical')">
+      Physical Activities
+    </button>
+    <div id="physical" class="section">
+      Physical Activities Coming Soon
+    </div>
+
   </div>
+
+  <script>
+    function toggleSection(id) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(sec => sec.style.display = "none");
+
+      const selected = document.getElementById(id);
+      selected.style.display = "block";
+    }
+  </script>
 
 </body>
 </html>
