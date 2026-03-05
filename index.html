@@ -122,7 +122,6 @@ fetch("data/daily_routine.json")
 
   routineDiv.innerHTML = "";
 
-  // Sort by order if exists
   data.sort((a, b) => (a.order || 0) - (b.order || 0));
 
   const grouped = {};
@@ -142,24 +141,27 @@ fetch("data/daily_routine.json")
 
   for (const level1 in grouped) {
 
-    const l1Div = document.createElement("div");
-    l1Div.className = "level1";
-    l1Div.textContent = level1;
-    routineDiv.appendChild(l1Div);
+    const d1 = document.createElement("details");
+    const s1 = document.createElement("summary");
+    s1.className = "level1";
+    s1.textContent = level1;
+    d1.appendChild(s1);
 
     for (const level2 in grouped[level1]) {
 
-      const l2Div = document.createElement("div");
-      l2Div.className = "level2";
-      l2Div.textContent = level2;
-      routineDiv.appendChild(l2Div);
+      const d2 = document.createElement("details");
+      const s2 = document.createElement("summary");
+      s2.className = "level2";
+      s2.textContent = level2;
+      d2.appendChild(s2);
 
       for (const level3 in grouped[level1][level2]) {
 
-        const l3Div = document.createElement("div");
-        l3Div.className = "level3";
-        l3Div.textContent = level3;
-        routineDiv.appendChild(l3Div);
+        const d3 = document.createElement("details");
+        const s3 = document.createElement("summary");
+        s3.className = "level3";
+        s3.textContent = level3;
+        d3.appendChild(s3);
 
         const list = document.createElement("ol");
 
@@ -187,9 +189,14 @@ fetch("data/daily_routine.json")
           list.appendChild(li);
         });
 
-        routineDiv.appendChild(list);
+        d3.appendChild(list);
+        d2.appendChild(d3);
       }
+
+      d1.appendChild(d2);
     }
+
+    routineDiv.appendChild(d1);
   }
 
 })
