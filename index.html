@@ -83,6 +83,22 @@ li {
   color: gray;
 }
 
+/* Link Button */
+.link-btn {
+  margin-left: 10px;
+  padding: 3px 8px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: none;
+  background: #2a5298;
+  color: white;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  background: #1e3c72;
+}
+
 summary {
   cursor: pointer;
 }
@@ -180,11 +196,14 @@ fetch("data/daily_routine.json")
       const task = document.createElement("div");
       task.style.display = "flex";
       task.style.alignItems = "center";
+      task.style.justifyContent = "space-between";
       task.style.marginBottom = "8px";
 
-      // Priority icon
+      const left = document.createElement("div");
+      left.style.display = "flex";
+      left.style.alignItems = "center";
+
       const icon = document.createElement("span");
-      icon.style.display = "inline-block";
       icon.style.width = "10px";
       icon.style.height = "10px";
       icon.style.borderRadius = "50%";
@@ -201,8 +220,17 @@ fetch("data/daily_routine.json")
       const text = document.createElement("span");
       text.textContent = item.item_name;
 
-      task.appendChild(icon);
-      task.appendChild(text);
+      left.appendChild(icon);
+      left.appendChild(text);
+      task.appendChild(left);
+
+      if (item.link && item.link.trim() !== "") {
+        const btn = document.createElement("button");
+        btn.className = "link-btn";
+        btn.textContent = "Open";
+        btn.onclick = () => window.open(item.link, "_blank");
+        task.appendChild(btn);
+      }
 
       column.appendChild(task);
     });
@@ -260,7 +288,26 @@ fetch("data/daily_routine.json")
         grouped[level1][level2][level3].forEach(item => {
 
           const li = document.createElement("li");
-          li.textContent = item.item_name;
+
+          const row = document.createElement("div");
+          row.style.display = "flex";
+          row.style.justifyContent = "space-between";
+          row.style.alignItems = "center";
+
+          const name = document.createElement("span");
+          name.textContent = item.item_name;
+
+          row.appendChild(name);
+
+          if (item.link && item.link.trim() !== "") {
+            const btn = document.createElement("button");
+            btn.className = "link-btn";
+            btn.textContent = "Open";
+            btn.onclick = () => window.open(item.link, "_blank");
+            row.appendChild(btn);
+          }
+
+          li.appendChild(row);
 
           if (item.notes) {
             const note = document.createElement("div");
