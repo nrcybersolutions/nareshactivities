@@ -19,7 +19,7 @@ h1 {
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: auto;
 }
 
@@ -44,7 +44,7 @@ h1 {
   border-radius: 12px;
 }
 
-/* LEVEL STYLES */
+/* Routine Styles */
 .level1 {
   background: #2a5298;
   color: white;
@@ -86,7 +86,7 @@ li {
 /* Link Button */
 .link-btn {
   margin-left: 10px;
-  padding: 3px 8px;
+  padding: 4px 10px;
   font-size: 11px;
   border-radius: 6px;
   border: none;
@@ -97,10 +97,6 @@ li {
 
 .link-btn:hover {
   background: #1e3c72;
-}
-
-summary {
-  cursor: pointer;
 }
 </style>
 </head>
@@ -150,90 +146,94 @@ fetch("data/daily_routine.json")
   const routineDiv = document.getElementById("routine");
   const dailyDiv = document.getElementById("daily");
 
-  if (!routineDiv || !dailyDiv) return;
-
   routineDiv.innerHTML = "";
   dailyDiv.innerHTML = "";
 
   data.sort((a, b) => (a.order || 0) - (b.order || 0));
 
   // ======================
-  // DAILY TASKS (3 COLUMN)
+  // DAILY TASKS (4 COLUMN PRIORITY)
   // ======================
 
-  const urgentItems = data.filter(item => item.urgent === true);
-  const groupedUrgent = {};
+  const groupedByCategory = {};
 
-  urgentItems.forEach(item => {
+  data.forEach(item => {
+    if (item.urgent !== true) return;
+
     const category = item.level1 || "Other";
 
-    if (!groupedUrgent[category]) {
-      groupedUrgent[category] = [];
+    if (!groupedByCategory[category]) {
+      groupedByCategory[category] = {
+        high: [],
+        medium: [],
+        low: []
+      };
     }
 
-    groupedUrgent[category].push(item);
+    if (item.priority === "high") {
+      groupedByCategory[category].high.push(item);
+    } else if (item.priority === "medium") {
+      groupedByCategory[category].medium.push(item);
+    } else {
+      groupedByCategory[category].low.push(item);
+    }
   });
 
   const grid = document.createElement("div");
   grid.style.display = "grid";
-  grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
-  grid.style.gap = "20px";
+  grid.style.gridTemplateColumns = "repeat(4, 1fr)";
+  grid.style.gap = "25px";
 
-  for (const category in groupedUrgent) {
+  for (const category in groupedByCategory) {
 
     const column = document.createElement("div");
 
     const header = document.createElement("div");
     header.style.fontWeight = "bold";
-    header.style.marginBottom = "10px";
-    header.style.color = "#2a5298";
+    header.style.fontSize = "18px";
+    header.style.marginBottom = "15px";
+    header.style.borderBottom = "2px solid #ddd";
+    header.style.paddingBottom = "6px";
     header.textContent = category;
 
     column.appendChild(header);
 
-    groupedUrgent[category].forEach(item => {
-
-      const task = document.createElement("div");
-      task.style.display = "flex";
-      task.style.alignItems = "center";
-      task.style.justifyContent = "space-between";
-      task.style.marginBottom = "8px";
-
-      const left = document.createElement("div");
-      left.style.display = "flex";
-      left.style.alignItems = "center";
-
-      const icon = document.createElement("span");
-      icon.style.width = "10px";
-      icon.style.height = "10px";
-      icon.style.borderRadius = "50%";
-      icon.style.marginRight = "8px";
-
-      if (item.priority === "high") {
-        icon.style.backgroundColor = "red";
-      } else if (item.priority === "medium") {
-        icon.style.backgroundColor = "#2a5298";
-      } else {
-        icon.style.backgroundColor = "gray";
-      }
-
-      const text = document.createElement("span");
-      text.textContent = item.item_name;
-
-      left.appendChild(icon);
-      left.appendChild(text);
-      task.appendChild(left);
-
-      if (item.link && item.link.trim() !== "") {
-        const btn = document.createElement("button");
-        btn.className = "link-btn";
-        btn.textContent = "Open";
-        btn.onclick = () => window.open(item.link, "_blank");
-        task.appendChild(btn);
-      }
-
-      column.appendChild(task);
+    // HIGH
+    groupedByCategory[category].high.forEach(item => {
+      column.appendChild(createTaskRow(item, "red"));
     });
+
+    const divider = document.createElement("hr");
+    divider.style.margin = "12px 0";
+    column.appendChild(divider);
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.textContent = "Show Medium & Low ▼";
+    toggleBtn.className = "link-btn";
+
+    const hiddenContainer = document.createElement("div");
+    hiddenContainer.style.display = "none";
+
+    toggleBtn.onclick = () => {
+      if (hiddenContainer.style.display === "none") {
+        hiddenContainer.style.display = "block";
+        toggleBtn.textContent = "Hide Medium & Low ▲";
+      } else {
+        hiddenContainer.style.display = "none";
+        toggleBtn.textContent = "Show Medium & Low ▼";
+      }
+    };
+
+    groupedByCategory[category].medium.forEach(item => {
+      hiddenContainer.appendChild(createTaskRow(item, "#2a5298"));
+    });
+
+    groupedByCategory[category].low.forEach(item => {
+      hiddenContainer.appendChild(createTaskRow(item, "gray"));
+    });
+
+    column.appendChild(toggleBtn);
+    column.appendChild(hiddenContainer);
 
     grid.appendChild(column);
   }
@@ -333,6 +333,45 @@ fetch("data/daily_routine.json")
 .catch(error => console.error("JSON error:", error));
 
 };
+
+// Helper
+function createTaskRow(item, color) {
+
+  const row = document.createElement("div");
+  row.style.display = "flex";
+  row.style.justifyContent = "space-between";
+  row.style.alignItems = "center";
+  row.style.marginBottom = "8px";
+
+  const left = document.createElement("div");
+  left.style.display = "flex";
+  left.style.alignItems = "center";
+
+  const dot = document.createElement("span");
+  dot.style.width = "8px";
+  dot.style.height = "8px";
+  dot.style.borderRadius = "50%";
+  dot.style.marginRight = "8px";
+  dot.style.backgroundColor = color;
+
+  const text = document.createElement("span");
+  text.textContent = item.item_name;
+
+  left.appendChild(dot);
+  left.appendChild(text);
+
+  row.appendChild(left);
+
+  if (item.link && item.link.trim() !== "") {
+    const btn = document.createElement("button");
+    btn.className = "link-btn";
+    btn.textContent = "Open";
+    btn.onclick = () => window.open(item.link, "_blank");
+    row.appendChild(btn);
+  }
+
+  return row;
+}
 
 </script>
 
